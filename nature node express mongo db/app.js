@@ -1,7 +1,12 @@
-const fs = require('fs')
 const express = require("express");
-
+const morgan = require('morgan')
+const tourRouter =require('./routes/tourRoutes')
+const userRouter = require('./routes/userRoutes')
 const app = express()
+
+//1 middlewares
+
+app.use(morgan('dev'))
 app.use(express.json())
 
 app.use((req,res,next) =>{
@@ -14,92 +19,10 @@ app.use((req,res,next) => {
     next()
 })
 
-const tour =JSON.parse( fs.readFileSync(`${__dirname}/dev-data/data/tours-sample.json`))
 
-const getAlltours = (req,res) =>{
-    console.log(req.requestTime)
+//2 Route Handlers
 
-    res.status(200).json( {
-        status:'success',
-        requestedAt:req.requestTime,
-        result:tour.length,
-        data:{
-            tour
-        } 
-          })
-}
-const getTour = (req,res) =>{
-    
-    const id = req.params.id*1
-    const tour1 = tour.find(el => el.id === id)
 
-    if(!tour1){
-        return res.status(404).json({
-            'status':'fail',
-            'message':'invalid id'
-        })
-    }
-
-    
-
-    res.status(200).json( {
-        status:'success',
-        // result:tour.length,
-        data:{
-            tour1
-        } 
-          })
-}
-const createTour =(req,res) => {
-    // console.log(req.body)
-     const newId = tour[tour.length-1].id+1
-     const newTour = Object.assign({id:newId},req.body)
-
-     tour.push(newTour)
-     fs.writeFile(`${__dirname}/dev-data/data/tours-sample.json`,JSON.stringify(tour),err => {
-    res.status(201).json({
-        status:'success',
-        data:{
-            tour:newTour
-        }
-    })
-     })
-    // res.send('done')
-}
-const updateTour = (req,res) =>{
-    //  res.send('sds')
-
-if(req.params.id*1 > tour.length){
-    return res.status(404).json({
-        'status':'fail',
-        'message':'invalid id'
-    })
-}
-res.status(200).json({
-    status:'success',
-    data:{
-        tour:'on it'
-    }
-})
-
-}
-const deleteTour = (req,res) =>{
-    //  res.send('sds')
-
-if(req.params.id*1 > tour.length){
-    return res.status(404).json({
-        'status':'fail',
-        'message':'invalid id'
-    })
-}
-res.status(204).json({
-    status:'success',
-    data:{
-        tour :null
-    }
-})
-
-}
 // app.get('/api/v1/tours',getAlltours)
 
 // app.get('/api/v1/tours/:id',getTour)
@@ -111,24 +34,19 @@ res.status(204).json({
 
 // app.delete('/api/v1/tours/:id',deleteTour)
 
+//3 Routes
 
 
-app.route('/api/v1/tours').get(getAlltours).post(createTour)
-app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour)
-
-
-
-const port = 3000
-app.listen(port,()=>{
-    console.log('app is running on port 3000')
-})
+app.use('/api/v1/tours',tourRouter)
+app.use('/api/v1/users', userRouter)
+//4 start Server
 
 
 
 
 
 
-
+module.exports = app  
 
 
 
