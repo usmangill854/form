@@ -7,9 +7,9 @@ const express = require('express')
 
 const router = express.Router() 
 
-router.param('id',tourController.checkID)
+// router.param('id',tourController.checkID)
 
-router.route('/').get(getAlltours).post(tourController.checkBody,createTour)
+router.route('/').get(getAlltours).post(createTour)
 
 router.route('/:id').get(getTour).patch(updateTour).delete(deleteTour)
 
