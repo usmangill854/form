@@ -62,7 +62,7 @@ exports.createTour =async (req,res) => {
         }
      
     }
-    )
+    ) 
 }
     // console.log(req.body)
     //  const newId = tour[tour.length-1].id+1
