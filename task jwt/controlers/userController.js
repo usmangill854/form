@@ -26,8 +26,19 @@ exports.createUser = async(req,res) => {
         console.log(error)
     }
 }
+exports.varifyToken = (req,res,nect) =>{
+  const bearerHeader = req.headers['authorization']
 
-exports.userLogin = async ,varifyToken, (req,res) => {
+  if(typeof bearerHeader !== 'undefined'){
+    const bearer = bearerHeader.split(' ')
+    const bearerToken = bearerHeader[1]
+    req.token = bearerToken
+    next( )
+  }else{
+      res.sendStatus(403)
+  }
+}
+exports.userLogin = async , (req,res) => {
 
 
     const user =await User.findOne({ email:req.body.email,password:req.body.password}) 
@@ -39,9 +50,7 @@ exports.userLogin = async ,varifyToken, (req,res) => {
             token
         })
     })
-const varifyToken = (req,res,nect) =>{
 
-}
 
 
 // exports.deleteUser = async(req,res) => {
